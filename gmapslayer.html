@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=7" />
+        <!--The viewport meta tag is used to improve the presentation and behavior of the samples
+        on iOS devices-->
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+        <title>Google Maps Layer</title>
+        <link rel="stylesheet" href="http://js.arcgis.com/3.14/esri/css/esri.css" />
+        <link rel="stylesheet" href="http://js.arcgis.com/3.14/dijit/themes/claro/claro.css" />
+        <style type="text/css">
+            html, body {
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #toc {
+              width:240px;
+            }
+        </style>
+        <script type="text/javascript">
+           var djConfig = {
+              parseOnLoad: true,
+              packages: [{
+                "name": "agsjs",
+                "location": location.pathname.replace(/\/[^/]+$/, "")+'/js/agsjs'
+              }]
+            };
+            console.log(location.pathname);
+            console.log(djConfig.packages[0].location);
+        </script>
+        <script src="http://js.arcgis.com/3.14/"></script>
+        <script type="text/javascript">
+            var map, googleLayer;
+
+            require([
+              "dojo/parser", "dojo/_base/connect", "dojo/dom", "dojo/dom-construct", "dojo/request",
+              "esri/map", "esri/geometry",
+              "agsjs/layers/GoogleMapsLayer",
+              "dojo/domReady!", "dijit/form/Button", "dijit/layout/BorderContainer", "dijit/layout/ContentPane"
+            ], function (parser, conn, dom, domConstruct, request,
+              Map, geometry,
+              GoogleMapsLayer
+              ) {
+              init();
+            
+            
+              function init() {
+                map = new Map("map", {
+                  center: [-82, 30],
+                  zoom: 8//,
+                  //basemap: "topo"
+                });
+
+                
+                googleLayer = new GoogleMapsLayer({
+                  id: 'google', // optional. esri layer id.
+                  apiOptions: { // load google API should be loaded.
+                    // v: '3.6' // API version. use a specific version is recommended for production system. 
+                    // client: gme-myclientID // for enterprise accounts;
+                    // libraries:'weather,panoramio'
+                  },
+                  mapOptions: {  // options passed to google.maps.Map contrustor
+                    streetViewControl: false // whether to display street view control. Default is true.
+                  }
+                });
+                
+                map.addLayer(googleLayer);
+                //conn.connect(googleLayer, 'onLoad', initTOC);                
+              }
+            });            
+        </script>
+    </head>
+    <body class="claro">
+        <div id="content" dojotype="dijit/layout/BorderContainer" design="headline" gutters="true" style="width: 100%; height: 100%;">
+            <div id="header" dojotype="dijit/layout/ContentPane" region="top">
+                <div>
+                    <b>Use Google Maps as Base Map Layer in ESRI ArcGIS JSAPI</b>
+                    <div style="right:20px;position:absolute; top: 15px" > <a href="../docs/googlemapslayer/examples.html">Documentation</a> </div>
+                </div>
+                <ul style="margin:2px">
+                    <li>
+                        Click buttons to switch base map types. "Gray" and "Night" is styled road map with different tones.
+                    </li>
+                    <li>
+                        Drag pegman icon <span style="display:inline-block;width: 20px; height: 35px; background-position: -15px -103px; background-image: url('http://maps.gstatic.com/mapfiles/cb/mod_cb_scout/cb_scout_sprite_api_003.png')">
+</span> on top left corner and drop on map to see street view. In selected area at large scale "satellite/hybrid" type, Click <img src="http://maps.gstatic.com/mapfiles/rotate2.png" style="-moz-user-select: none; border: 0px none; padding: 0px; margin: 0px; cursor: pointer; width: 22px; height: 22px;" title="Rotate map 90 degrees"> to rotate oblique(45 degree) images. 
+                    </li>
+                    
+                </ul>
+            </div>
+            <div id="toc" dojotype="dijit/layout/ContentPane" region="left">
+              </div>
+           <div id="map" dojotype="dijit/layout/ContentPane" region="center">
+                <div id="buttons" style="position:absolute; right:25px; top:20px; z-Index:999;">
+                    <button dojoType="dijit/form/Button" onClick="googleLayer.setMapTypeId(agsjs.layers.GoogleMapsLayer.MAP_TYPE_ROADMAP);googleLayer.setMapStyles(null);">
+                        Road Map
+                    </button>
+                    <button dojoType="dijit/form/Button" onClick="googleLayer.setMapTypeId(agsjs.layers.GoogleMapsLayer.MAP_TYPE_SATELLITE);">
+                        Satellite
+                    <button dojoType="dijit/form/Button" onClick="googleLayer.setMapTypeId(agsjs.layers.GoogleMapsLayer.MAP_TYPE_HYBRID);">
+                       Hybrid
+                    </button>
+                    <button dojoType="dijit/form/Button" onClick="googleLayer.setMapTypeId(agsjs.layers.GoogleMapsLayer.MAP_TYPE_TERRAIN);">
+                       Terrain 
+                    </button>
+                    <button dojoType="dijit/form/Button" onClick="googleLayer.setMapTypeId(agsjs.layers.GoogleMapsLayer.MAP_TYPE_ROADMAP);googleLayer.setMapStyles(agsjs.layers.GoogleMapsLayer.MAP_STYLE_GRAY);">
+                        Gray
+                    </button>
+                     <button dojoType="dijit/form/Button" onClick="googleLayer.setMapTypeId(agsjs.layers.GoogleMapsLayer.MAP_TYPE_ROADMAP); googleLayer.setMapStyles(agsjs.layers.GoogleMapsLayer.MAP_STYLE_NIGHT);">
+                        Night
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
